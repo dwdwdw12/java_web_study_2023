@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>SummerNoteExample</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <!-- 서머노트를 위해 추가해야할 부분 -->
+  <script src="summernote/summernote-lite.js"></script>
+  <script src="summernote/summernote-ko-KR.js"></script>
+  <link rel="stylesheet" href="summernote/summernote-lite.css">
+  <!--  -->
+  
+</head>
+<body>
+
+<div id="wrap">
+     <div id="header">
+           <div id="headerTitle">SIST Class4</div>
+     </div>
+     <div id="container">
+     <form method="post" action="summernote_process.jsp"><!--  get방식으로 255까지 넘길 수 있기 때문에 getㄴㄴ(이미지가 첨부되면  -->
+     <label>작성자</label>
+     <input type="text" name="name" class="inputBox"/><br/>
+     <label>제목</label>
+     <input type="text" name="subject" class="inputBox"/><br/>
+     <label>내용</label>
+     <textarea id="summernote" class="summernote" name="contents"></textarea><br/>
+     <input type="button" value="글쓰기" class="btn" id="btn"/>
+     </form>
+     </div>
+     <div id="footer">
+           <div id="footerTitle">copyright&copy; all right  reserved. class 4.</div>
+     </div>
+</div>
+<!-- <h1>example</h1>
+<div class="container">
+  <textarea class="summernote" name="editordata"></textarea>    
+</div> -->
+<!-- <script>
+$('.summernote').summernote({
+	  height: 450,
+	  lang: "ko-KR"
+	});
+</script> -->
+	<script>
+		$(document).ready(function() {
+
+					function sendFile(file) {
+						var data = new FormData();
+						data.append("file", file);
+						$.ajax({
+							url : "/uploadSummernoteImageFile2",
+							type : "POST",
+							enctype: 'multipart/form-data',
+							data : data,
+							cache: false,
+							contentType : false,
+							processData : false,
+							success : function(image) {
+								$('#summernote').summernote('insertImage', image);
+								error: function(e){console.log(e);}
+							}
+						});
+					}
+
+					$('#summernote').summernote({
+						height : 300,
+						width : 700,
+						lang : "ko-KR",
+						 callbacks : {
+							onImageUpload : function(files) {
+								sendFile(files[0]);
+							}
+						} 
+					});
+				});
+	</script>
+</body>
+</html>
